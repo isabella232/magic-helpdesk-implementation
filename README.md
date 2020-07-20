@@ -187,6 +187,16 @@ passes through different systems.
 | Request attachments | `name`         | `name`         | Direct mapping   | Email attachment     | May not be directly exposed   | Issue description | Attachments are added inline within the issue description   |
 | Request attachments | `url`          | `url`          | Direct mapping   | Email attachment     | May not be directly exposed   | Issue description | Attachments are added inline within the issue description   |
 
+#### Request attachment storage
+
+Attachments for requests have been stored in different places as the implementation of the Helpdesk has evolved:
+
+* in version `1.0.0`, attachments where stored in `/data/magic_external/magic_helpdesk_requests/515` on the BAS SAN,
+  organised in per-issue directories
+* after version `2.0.0`, attachments are stored in a Microsoft SharePoint library, currently
+  [`felnne-api-test2`](https://nercacuk.sharepoint.com/sites/BASMagicTeam/felnneapitest2/Forms/AllItems.aspx) in the BAS
+  MAGIC Team SharePoint site (internal, MAGIC).
+
 ## Setup
 
 This project runs as a static website.
