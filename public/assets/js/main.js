@@ -31,7 +31,7 @@ jQuery(function(jQuery){
     md.set({gfm: true});
 
     var payload = {
-      "subject": "Helpdesk request",
+      "summary": "Helpdesk request",
       "content": md.render($("#request-form #request-form-content").val()),
       "sender-name": $("#request-form #request-form-sender-name").val(),
       "sender-email": $("#request-form #request-form-sender-email").val(),
