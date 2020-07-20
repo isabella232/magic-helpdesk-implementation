@@ -31,8 +31,7 @@ jQuery(function(jQuery){
       "attachments": attachments
     };
 
-    fetch("", {
-    // fetch("https://prod-135.westeurope.logic.azure.com:443/workflows/494981bee28549508574591f9e4b32f8/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vYYX9CfzI9TKkD5BR2rr-8MpwGvj3E7rrzCE35Vu-HE", {
+    fetch("https://prod-135.westeurope.logic.azure.com:443/workflows/494981bee28549508574591f9e4b32f8/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vYYX9CfzI9TKkD5BR2rr-8MpwGvj3E7rrzCE35Vu-HE", {
         method: "post",
         headers: new Headers({"content-type": "application/json;charset=UTF-8"}),
         body: JSON.stringify(payload)
