@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">    
+    <head th:fragment="layout">
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content="HTTP error page"></meta>
+        <meta name="author" content="David Herbert, British Antarctic Survey"></meta>         
+        <link rel="icon" type="image/vnd.microsoft.icon" href="https://cdn.web.bas.ac.uk/magic/favicons/bas.ico"></link>
+        <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="https://cdn.web.bas.ac.uk/magic/favicons/bas.ico"></link>
+        <title>An error occurred</title>
+        <link href="https://cdn.web.bas.ac.uk/magic/css/bootstrap/3.3.7/bootstrap.min.css" rel="stylesheet"></link>        
+        <link href="https://cdn.web.bas.ac.uk/magic/css/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"></link>
+        <link th:href="@{'/static/css/nav.css'}" rel="stylesheet"></link>
+        <link th:href="@{'/static/css/error.css'}" rel="stylesheet"></link>        
+    </head>    
+    <body>
+        <div id="wrapper">
+            <div th:include="fragments/nav :: layout"></div>
+            <div class="container">
+                <div class="alert alert-danger" role="alert">
+                    <h1>The following error occurred:</h1>
+                    <table class="table table-striped">
+                        <tr><th>HTTP status</th><td th:text="${httpstatus}"></td></tr>
+                        <tr><th>Error</th><td th:text="${httperror}"></td></tr>
+                        <tr><th>Message</th><td th:text="${httpmessage}"></td></tr>
+                        <tr><th>Time</th><td th:text="${timestamp}"></td></tr>
+                        <tr><th>Referrer</th><td th:text="${referrer}"></td></tr>
+                    </table>
+                </div>
+            </div>            
+        </div>        
+    </body>
+</html>

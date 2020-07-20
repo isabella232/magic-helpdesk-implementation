@@ -1,0 +1,5 @@
+# Build output directories
+target/
+node_modules/
+.editorconfig
+.rsync-filter

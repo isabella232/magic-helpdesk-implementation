@@ -1,0 +1,71 @@
+div#wrapper {
+    width: 100%;
+}
+
+@media(min-width:768px) {
+    div#wrapper {
+        width: 75%;
+    }
+}
+
+/* OL control custom styles */
+.ol-zoomslider {
+    top: 8px;
+    background-color: rgba(128,128,128,.6);
+}
+
+.ol-zoomslider:hover {
+    background-color: rgba(160,160,160,.6);
+}
+
+.custom-mouse-position {
+    right: 8px;
+    top: 8px;
+    position: absolute;
+}
+
+.custom-scale-line-top {
+    background: transparent;
+    bottom: 26px;
+    left: 10px;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+}
+
+.custom-scale-line-top-inner {
+    border: 1px solid #3a3f44;
+    border-top: none;
+    color: #3a3f44;
+    font-size: 12px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.custom-scale-line-bottom {
+    background: transparent;
+    bottom: 10px;
+    left: 10px;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+}
+
+.custom-scale-line-bottom-inner {
+    border: 1px solid #3a3f44;
+    border-bottom: none;
+    border-top: none;
+    color: #3a3f44;
+    font-size: 12px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/*div#helpdesk-other-attachments {
+    min-height: 400px; 
+    height: auto !important; 
+    border: 3px #909090 dashed; 
+    padding: 10px;
+}*/
