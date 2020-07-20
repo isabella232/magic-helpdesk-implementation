@@ -1,0 +1,40 @@
+---
+
+  # == Notes ==
+
+  # - GitLab automatically passes artifacts from previous stages by default
+  # - Set required secret variables at: https://gitlab.data.bas.ac.uk/MAGIC/helpdesk-implementation/-/settings/ci_cd
+
+  # = Secret variables
+  #   Variables are grouped by section in KEY: "value" format (e.g. FOO: "bar")
+  #   Where a variable should be protected (only accessible to the master branch, tags, its name is appended with
+  #     '(protected)' (e.g. FOO (protected)`
+  #   Where a variable is a file, it's name is appended with '(file)' and the value refers to the file that should be
+  #     used as it's contents (e.g. FOO (file): "[contents of ./bar]"
+  #   Sensitive values are represented by "[Sensitive]"
+  #
+  # - AWS IAM id/secret keys for 'bas-gitlab-ci-magic-helpdesk' user
+  # > AWS_ACCESS_KEY_ID: "[Sensitive]"
+  # > AWS_SECRET_ACCESS_KEY: "[Sensitive]"
+
+  # == Global settings ==
+
+  stages:
+    - 🚚 publish
+
+  variables:
+    APP_NAME: magic-helpdesk
+
+  image:
+    name: governmentpaas/awscli:latest
+    entrypoint: [""]
+
+  # == Jobs ==
+
+  publish:
+    stage: 🚚 publish
+    script:
+      - aws s3 sync --delete public/ s3://magic-helpdesk.web.bas.ac.uk/
+    environment:
+      name: production
+      url: https://magic-helpdesk.web.bas.ac.uk

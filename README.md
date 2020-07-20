@@ -1,121 +1,281 @@
-# MAGIC Helpdesk Request System
+# MAGIC Helpdesk Implementation
 
-Allows BAS users to submit requests to the MAGIC helpdesk via a web form, specifying area of interest in a map-based way and permitting user attachments.
+This project documents how the MAGIC Helpdesk is implemented and manages the online web form used by users.
 
-## Overview
-
-* Updated June 2018, this is the master version of the MAGIC Helpdesk Request System.  It uses JavaScript/HTML/CSS front end, with a Spring Boot Java 8 back-end. The project
-is maintained by [David Herbert](mailto:darb1@bas.ac.uk).
-
-## Setup
-
-The MAGIC Helpdesk Request UI is a Java back-end application running within a Tomcat container.  It is deployed on the Virtual Machine (VM) bslmaga and accessible through the endpoints:
-
-<pre>
-http://bslmaga.nerc-bas.ac.uk/helpdesk
-https://geo.web.bas.ac.uk/helpdesk
-</pre>
-
-The latter is the general endpoint available outside of BAS.
-
-The source code for the Helpdesk application lives in the repository of this project.
-
-## Deployment
-
-There are two main ways to build and deploy a new version of the code.  Make your code changes in GitLab, either by editing directly in the GitLab GUI or via another editor and commit/push cycle to GitLab.
-
-### Automated approach via CI Pipeline in Jenkins (bsl-mapengine development server)
-
-Decide whether or not you want to deploy the new version of the code to bslmaga AND bsl-mapengine, or just bsl-mapengine.  Edit the 'deployto.txt' file at the top level of the project.  To deploy to both servers, the content of this file should be the single line 'bslmaga' (without quotes).  To deploy only to dev (e.g. to test a new version without upsetting the live production version), the file should contain just the line '#bslmaga' (i.e. commented out).  Make sure this change is committed and pushed to the master branch in GitLab.
-
-Log into Jenkins at:
-
-<pre>
-http://bsl-mapengine.nerc-bas.ac.uk:8084
-</pre>
-
-Username 'admin', password as for ADD Geoserver administrator.
-
-You should see the main project dashboard.  Select 'magic_helpdesk', and on the resulting page, select 'Build now' from the lh pane.  The build and deploy cycle will start, the number listed with a bullet graphic and the build number under 'Build History' in the lh pane.  Drop down the menu next to the bullet and select 'Console output' to see the results of the deployment.  If something fails it should be reasonably obvious what has happened.  Failures tend to either be:
-
-1. Syntax errors in JavaScript causing grunt minification of the scripts to fail
-2. Tomcat deploy problems
-
-For the former, best to look at the changes you just made, take a look in an editor that validates JavaScript, or use JSLint or another tool.  For the latter, log into the relevant server (here either bslmaga or bsl-mapengine) and check the server catalina.out log, which should give the details.  Ordinarily the build should sign off with 'BUILD SUCCESS'.  Whereupon the new version of the code should be live, give or take an Empty Cache and Hard Reload to get rid of browser cached versions of the old state.
-
-### Manual approach
-
-If you really must do this, see the documentation at:
-
-https://gitlab.data.bas.ac.uk/MAGIC/mapengine/wikis/building-mapengine-manually
-
-Start from 'Clone the repository'.  The repo in this case will be:
-
-https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk.git
-
-The goal is to end up with a helpdesk.war file which can be deployed in bslmaga/bsl-mapengine Tomcat.
+See the main [MAGIC Helpdesk](https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk) project for the actual MAGIC
+Helpdesk.
 
 ## Usage
 
-The GUI itself should be very intuitive and easy-to-use.  All the fields to be filled in have informative tooltips.  Since the new version was launched in 2018 there have been very few problems with usability.  Most of the difficulties have been caused by the interaction with GitLab going wrong.  It may occasionally be necessary to troubleshoot this side of things.
+Users can submit a request to the MAGIC helpdesk via a [Supported communication channel](#supported-channels):
 
-### Troubleshooting the GitLab interaction
+* online, by using the web form at [magic-helpdesk.web.bas.ac.uk](https://magic-helpdesk.web.bas.ac.uk)
+* email, by contacting [magic@bas.ac.uk](mailto:magic@bas.ac.uk)
+* in-person/phone, by contacting a member of MAGIC who will submit a request on their behalf if needed
 
-Here is an example of a snippet from the server Tomcat catalina.out file (/packages/tomcat/current/logs/catalina.out) where the request to GitLab was successful:
+In all cases, submitted requests are added as GitLab issues in the
+[MAGIC Helpdesk](https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk) project.
 
-<pre>
-===== PUT request to GitLab at https://gitlab.data.bas.ac.uk/api/v4/projects/462/issues =====
-Description : Request by <strong>David Herbert</strong> on <strong>24-09-2018</strong><br><strong>Email</strong> : darb1@bas.ac.uk<br><strong>Phone</strong> : 01223221357<br><strong>Required by</strong> : 28-09-2018<br><strong>Details</strong> :<br>This is a test - GitLab was returning an error for submissions 24/09/2018.<br><br><strong>Attached files:</strong><br>Download user attachment : <a href="http://geo.web.bas.ac.uk/helpdesk/issue_attachment?iid=96&f=aoi.zip&mime=application%2Fzip">aoi.zip (713 bytes)</a><br>Download user attachment : <a href="http://geo.web.bas.ac.uk/helpdesk/issue_attachment?iid=96&f=img_0639.jpg&mime=image%2Fjpeg">img_0639.jpg (879.0KB)</a><br>
-===== GitLab PUT succeeded =====
-===== End of GitLab PUT success message =====
-===== POST request to GitLab at https://gitlab.data.bas.ac.uk/api/v4/projects/462/issues =====
-===== GitLab POST succeeded =====
-===== End of GitLab POST success message =====
-</pre>
+## Implementation
 
-And a corresponding example where it failed:
+The MAGIC Helpdesk is designed to be a simple, low maintenance and highly available service.
 
-<pre>
-PUT request to GitLab at https://gitlab.data.bas.ac.uk/api/v4/projects/462/issues =====
-===== GitLab PUT failed =====
-Status code : 500 returned by GitLab
-Content return from GitLab follows:
-===== End of GitLab failure message =====
-</pre>
+In a general sense, requests are captured through a [Supported communication channel](#supported-channels) and turned
+into a GitLab issue using the [Data model mapping](#data-model-mapping).
 
-The log file can be followed in a blow-by-blow fashion using:
+More specifically, various Power Automate Flows are used as the backend of the MAGIC Helpdesk, responding to incoming
+requests from a communications channel and processing them into an issue for submission through GitLab's issue API.
 
-<pre>
-tail -f /packages/tomcat/current/logs/catalina.out
-</pre>
+Where possible, the Microsoft 365 ecosystem is used as it is:
 
-when logged into the server via the Unix command line.
+* officially supported by BAS/NERC IT
+* pre-approved for processing UKRI information
+* avoids single points of failure
 
-Use of Chrome debug tools is recommended when trying to see exactly what the GUI demanded of GitLab.  Select 'Network' and 'XHR' to see what happened and any output.  It may be possible to e.g. construct a PostMan request to isolate the GitLab call and test it out of the UI context.
+### Availability
 
-## Developing
+The MAGIC Helpdesk is intentionally not restricted to the BAS network to allow project partners and other relevant
+parties to submit requests alongside BAS staff.
 
-The checked out repository can be edited in a number of ways, e.g. through the GitLab editor/IDE, desktop programs like VS Code or Netbeans IDE (https://netbeans.org/).  The project uses Maven to build in the Java dependencies.  Minified versions of the
-JavaScript and CSS files are created by running the Gruntfile.js at the top level of the project.
+### Supported channels
 
-### Version control
+#### Email
 
-This project uses version control. The project repository is located at:
-[https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk/tree/master](https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk/tree/master).
+##### Emails to MAGIC shared mailbox
 
-Write access to this repository is restricted. Contact the project maintainer [David Herbert](mailto:darb1@bas.ac.uk) to request access.
+New emails sent to this mailbox trigger a Microsoft Power Automate Flow,
+[MAGIC Helpdesk (emails)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/shared/72b16e9e-f864-4596-a695-484b7aa2eec0/details).
 
-### Tests
+If attachments are included in an email, an instruction is added to the helpdesk request for users to refer to the original email in OutLook.
 
-This project uses manual testing only.
+Processed emails are marked as read in the shared mailbox.
+
+**Note:** Basic filtering is used to exclude spam reports and other erroneous emails from being processed.
+
+##### Emails to MAGIC staff
+
+If MAGIC staff are emailed directly, and the email is a Helpdesk request, the staff member will forward the message to
+the MAGIC shared mailbox for processing as a Helpdesk request.
+
+#### Online
+
+##### BAS Digital Workspace
+
+The BAS Digital Workspace includes [a page](https://geo.web.bas.ac.uk/helpdesk/home) directing users to create Helpdesk
+requests via a web form.
+
+This ensures users can find the MAGIC Helpdesk within the Digital Workspace search and site wide navigation.
+
+##### Web form
+
+Requests submitted through the online web form trigger a Microsoft Power Automate Flow,
+[MAGIC Helpdesk (web form)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/d84b9a44-8b3c-465b-96d3-c95af6ad4c4c/details).
+
+Attachments added to the online form trigger a separate Power Automate Flow,
+[MAGIC Helpdesk (file upload)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/84e5c72c-655b-4c11-8c4a-73bc9b52b931/details),
+which will save the file to a SharePoint document library. The web form will include attachment information in the
+request sent to create the helpdesk request.
+
+Multiple files can be attached, each with a maximum size of 100MB (set by Power Automate).
+
+#### In-person/Phone
+
+If a user phones a MAGIC staff member or speaks to them in person, and the conversation should be processed as a
+helpdesk request, the staff member will transcribe/record the request as a GitLab issue in the Helpdesk manually.
+
+If the request is very simple (such as providing a pre-printed map) it may not be recorded as a request for efficiency
+reasons.
+
+### Components
+
+**Note:** See the [Supported channels](#supported-channels) section for how these components are used together to
+capture and process requests.
+
+#### MAGIC shared mailbox
+
+A Microsoft Office 365 / Exchange shared mailbox assigned to MAGIC available at these addresses:
+
+* `basmagic@bas.ac.uk` (primary name)
+* `magic@bas.ac.uk` (alias name, preferred)
+
+This mailbox is owned by Adrian and administered by Laura and others that monitor the MAGIC Helpdesk.
+
+#### BAS Digital Workspace
+
+A Microsoft SharePoint intranet for use by BAS staff. It provides a range of functions but within the context of this
+project provides:
+
+* links to internal services, such as helpdesk's
+* team information pages, including any services they offer
+
+This intranet is owned by BAS communications with some editing permissions delegated to local editors (Elena for MAGIC).
+
+#### Online web form
+
+A external web form used as an online interface for users to submit requests into the MAGIC Helpdesk.
+
+This form is hosted as an AWS S3 static site managed through this project.
+
+#### Microsoft SharePoint
+
+A document management and information sharing platform within Office 365.
+
+It consists of sites containing lists, document libraries and pages. Within the context of this project, SharePoint is
+used for storing attachments for requests made via the online web form. Attachments are stored in a document library.
+
+#### Microsoft Power Automate
+
+Previously known as Microsoft Flow, a business and workflow automation platform within Office 365.
+
+It consists of a trigger (e.g. new email received) and actions (e.g. submitting a HTTP request). Power Automate
+tracks executions and allows the inputs/outputs of each instance to be viewed for debugging. Flows can be shared with a
+group to remove having a single owner.
+
+Power Automate includes many actions relating to other Microsoft services, such as SharePoint or Exchange and masks the
+technical details of how to connect, authenticate and use them. It also supports generic actions such as making HTTP
+requests, which is used for communicating with GitLab for example.
+
+Power Automate is effectively the backend of the MAGIC Helpdesk, responding to incoming requests from a communications
+channel and processing them into an issue that can be submitted through GitLab's issue API.
+
+#### GitLab
+
+Specifically the self-hosted BAS instance. GitLab is used across MAGIC for project management and is used for the MAGIC
+Helpdesk.
+
+### Data model
+
+#### Requests
+
+Helpdesk requests are simple objects with these properties:
+
+| Property       | Data Type                                            | Required | Description                         | Example                                   |
+| -------------- | ---------------------------------------------------- | -------- | ----------------------------------- | ----------------------------------------- |
+| `content`      | String                                               | Yes      | Request description                 | *I would like a map of the attached AOI.* |
+| `sender-name`  | String                                               | Yes      | Name of the requester               | *Connie Watson*                           |
+| `sender-email` | String                                               | Yes      | Email address of the requester      | *conwat@bas.ac.uk*                        |
+| `attachments`  | Array of [Request attachments](#request-attachments) | No       | File attachments related to request | -                                         |
+
+**Note:** This is an abstract model and is [mapped](#data-model-mappings) to a real implementation.
+
+#### Request attachments
+
+Request attachments are simple objects with these properties:
+
+| Property | Data Type | Required | Description                    | Example                        |
+| -------- | --------- | -------- | ------------------------------ | ------------------------------ |
+| `name`   | String    | Yes      | Filename of attachment         | *aoi.gpkg*                     |
+| `url`    | String    | Yes      | URL to download the attachment | *https://example.com/aoi.gpkg* |
+
+**Note:** This is an abstract model and is [mapped](#data-model-mappings) to a real implementation.
+
+#### Data model mappings
+
+Abstract data models needed to mapped to an implementation to be used. Multiple implementations may be used as data
+passes through different systems.
+
+| Data Model          | Property       | Web Form       | Web Form (Notes) | Email                | Email (Notes)                 | GitLab Issues     | GitLab Issues (Notes)                                       |
+| ------------------- | -------------- | -------------- | ---------------- | -------------------- | ----------------------------- | ----------------- | ----------------------------------------------------------- |
+| Requests            | `content`      | `content`      | Direct mapping   | Email body           | Direct mapping                | Issue description | Direct mapping                                              |
+| Requests            | `sender-name`  | `sender-name`  | Direct mapping   | Email sender name    | Parsed from email sender      | Issue description | All issues are created as the BAS Feedback Service Bot user |
+| Requests            | `sender-email` | `sender-email` | Direct mapping   | Email sender address | Parsed from email sender      | Issue description | All issues are created as the BAS Feedback Service Bot user |
+| Requests            | `attachments`  | `attachments`  | Direct mapping   | Email attachments    | Parsed from email attachments | Issue description | Attachments are added inline within the issue description   |
+| Request attachments | `name`         | `name`         | Direct mapping   | Email attachment     | May not be directly exposed   | Issue description | Attachments are added inline within the issue description   |
+| Request attachments | `url`          | `url`          | Direct mapping   | Email attachment     | May not be directly exposed   | Issue description | Attachments are added inline within the issue description   |
+
+## Setup
+
+This project runs as a static website.
+
+### Terraform
+
+Terraform is used to provision resources required for the static website.
+
+Access to the [BAS AWS account](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provisioning these resources.
+
+**Note:** This provisioning should have already been performed (and applies globally). If changes are made to this
+provisioning it only needs to be applied once.
+
+```shell
+# start terraform inside a docker container
+$ cd provisioning/terraform
+$ docker-compose run terraform
+# setup terraform
+$ terraform init
+# apply changes
+$ terraform validate
+$ terraform fmt
+$ terraform apply
+# exit container
+$ exit
+$ docker-compose down
+```
+
+#### Terraform remote state
+
+State information for this project is stored remotely using a
+[Backend](https://www.terraform.io/docs/backends/index.html).
+
+Specifically the [AWS S3](https://www.terraform.io/docs/backends/types/s3.html) backend as part of the
+[BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project.
+
+Remote state storage will be automatically initialised when running `terraform init`. Any changes to remote state will
+be automatically saved to the remote backend, there is no need to push or pull changes.
+
+##### Remote state authentication
+
+Permission to read and/or write remote state information for this project is restricted to authorised users. Contact
+the [BAS Mapping and Geographic Information Centre (MAGIC)](mailto:servicedesk@bas.ac.uk) to request access.
+
+See the [BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project for how these
+permissions to remote state are enforced.
+
+## Development
+
+```shell
+$ git clone https://gitlab.data.bas.ac.uk/MAGIC/helpdesk-implementation
+$ cd helpdesk-implementation
+```
+
+### Development environment
+
+A local instance of this project can be ran using the Docker Compose:
+
+```shell
+$ docker-compose up
+```
+
+This will run a local Nginx webserver available at `http://localhost:9000`.
+
+## Deployment
+
+### Continuous Deployment
+
+All commits will trigger a Continuous Deployment process using GitLab's CI/CD platform, configured in `.gitlab-ci.yml`.
+
+## Release procedure
+
+For all releases:
+
+1. create a release branch
+2. close release in `CHANGELOG.md`
+3. push changes, merge the release branch into `master` and tag with version
 
 ## Feedback
 
-The maintainer of this project is [David Herbert - BAS Mapping and Geographic Information Centre](mailto:darb1@bas.ac.uk).
+The maintainer of this project is the BAS Mapping and Geographic Information Centre (MAGIC), they can be contacted at:
+[servicedesk@bas.ac.uk](mailto:servicedesk@bas.ac.uk).
+
+## Issue tracking
+
+This project uses issue tracking, see the
+[Issue tracker](https://gitlab.data.bas.ac.uk/MAGIC/helpdesk-implementation/issues) for more information.
+
+**Note:** Read & write access to this issue tracker is restricted. Contact the project maintainer to request access.
 
 ## License
 
-© UK Research and Innovation (UKRI), 2019 - 2020, British Antarctic Survey.
+© UK Research and Innovation (UKRI), 2020, British Antarctic Survey.
 
 You may use and re-use this software and associated documentation files free of charge in any format or medium, under
 the terms of the Open Government Licence v3.0.
