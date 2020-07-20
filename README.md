@@ -39,6 +39,8 @@ parties to submit requests alongside BAS staff.
 
 ### Supported channels
 
+![magic-helpdesk-communication-channels.png](docs/assets/img/magic-helpdesk-communication-channels.png)
+
 #### Email
 
 ##### Emails to MAGIC shared mailbox
