@@ -153,12 +153,13 @@ Helpdesk.
 
 Helpdesk requests are simple objects with these properties:
 
-| Property       | Data Type                                            | Required | Description                         | Example                                   |
-| -------------- | ---------------------------------------------------- | -------- | ----------------------------------- | ----------------------------------------- |
-| `content`      | String                                               | Yes      | Request description                 | *I would like a map of the attached AOI.* |
-| `sender-name`  | String                                               | Yes      | Name of the requester               | *Connie Watson*                           |
-| `sender-email` | String                                               | Yes      | Email address of the requester      | *conwat@bas.ac.uk*                        |
-| `attachments`  | Array of [Request attachments](#request-attachments) | No       | File attachments related to request | -                                         |
+| Property       | Data Type                                            | Required | Description                           | Example                                   |
+| -------------- | ---------------------------------------------------- | -------- | ------------------------------------- | ----------------------------------------- |
+| `content`      | String                                               | Yes      | Request description                   | *I would like a map of the attached AOI.* |
+| `sender-name`  | String                                               | Yes      | Name of the requester                 | *Connie Watson*                           |
+| `sender-email` | String                                               | Yes      | Email address of the requester        | *conwat@bas.ac.uk*                        |
+| `need-by-date` | String                                               | No       | Due date (in ISO `YYYY-MM-DD` format) | *2020-04-16*                              |
+| `attachments`  | Array of [Request attachments](#request-attachments) | No       | File attachments related to request   | -                                         |
 
 **Note:** This is an abstract model and is [mapped](#data-model-mappings) to a real implementation.
 
@@ -184,6 +185,7 @@ passes through different systems.
 | Requests            | `sender-name`  | `sender-name`  | Direct mapping   | Email sender name    | Parsed from email sender      | Issue description | All issues are created as the BAS Feedback Service Bot user |
 | Requests            | `sender-email` | `sender-email` | Direct mapping   | Email sender address | Parsed from email sender      | Issue description | All issues are created as the BAS Feedback Service Bot user |
 | Requests            | `attachments`  | `attachments`  | Direct mapping   | Email attachments    | Parsed from email attachments | Issue description | Attachments are added inline within the issue description   |
+| Requests            | `need-by-date` | `need-by-date` | Direct mapping   | *-*                  | Not supported                 | Issue due date    | Due dates are set as metadata within an issue               |
 | Request attachments | `name`         | `name`         | Direct mapping   | Email attachment     | May not be directly exposed   | Issue description | Attachments are added inline within the issue description   |
 | Request attachments | `url`          | `url`          | Direct mapping   | Email attachment     | May not be directly exposed   | Issue description | Attachments are added inline within the issue description   |
 

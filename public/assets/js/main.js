@@ -2,6 +2,13 @@
 var attachments_base_url = "https://nercacuk.sharepoint.com/sites/BASMagicTeam/felnneapitest2/";
 var attachments = [];
 
+// Request form setup
+jQuery(function(jQuery){
+  var now = new Date();
+  var nextWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 8);
+  $("#request-form-need-by-date").val(nextWeek.toISOString().substring(0, 10));
+});
+
 // Request form submission
 jQuery(function(jQuery){
   $("#request-form-submit").click(function() {
@@ -28,7 +35,8 @@ jQuery(function(jQuery){
       "content": md.render($("#request-form #request-form-content").val()),
       "sender-name": $("#request-form #request-form-sender-name").val(),
       "sender-email": $("#request-form #request-form-sender-email").val(),
-      "attachments": attachments
+      "need-by-date": $("#request-form-need-by-date").val(),
+      "attachments": attachments,
     };
 
     fetch("https://prod-135.westeurope.logic.azure.com:443/workflows/494981bee28549508574591f9e4b32f8/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vYYX9CfzI9TKkD5BR2rr-8MpwGvj3E7rrzCE35Vu-HE", {
