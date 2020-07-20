@@ -2,8 +2,8 @@
 
 This project documents how the MAGIC Helpdesk is implemented and manages the online web form used by users.
 
-See the main [MAGIC Helpdesk](https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk) project for the actual MAGIC
-Helpdesk.
+See the main [MAGIC Helpdesk](https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk) project (internal) for the
+actual MAGIC Helpdesk.
 
 ## Usage
 
@@ -14,7 +14,7 @@ Users can submit a request to the MAGIC helpdesk via a [Supported communication 
 * in-person/phone, by contacting a member of MAGIC who will submit a request on their behalf if needed
 
 In all cases, submitted requests are added as GitLab issues in the
-[MAGIC Helpdesk](https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk) project.
+[MAGIC Helpdesk](https://gitlab.data.bas.ac.uk/MAGIC/general-and-helpdesk) project (internal).
 
 ## Implementation
 
@@ -46,7 +46,7 @@ parties to submit requests alongside BAS staff.
 ##### Emails to MAGIC shared mailbox
 
 New emails sent to this mailbox trigger a Microsoft Power Automate Flow,
-[MAGIC Helpdesk (emails)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/shared/72b16e9e-f864-4596-a695-484b7aa2eec0/details).
+[MAGIC Helpdesk (emails)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/shared/72b16e9e-f864-4596-a695-484b7aa2eec0/details) (internal, MAGIC).
 
 If attachments are included in an email, an instruction is added to the helpdesk request for users to refer to the original email in OutLook.
 
@@ -63,20 +63,22 @@ the MAGIC shared mailbox for processing as a Helpdesk request.
 
 ##### BAS Digital Workspace
 
-The BAS Digital Workspace includes [a page](https://geo.web.bas.ac.uk/helpdesk/home) directing users to create Helpdesk
-requests via a web form.
+The BAS Digital Workspace includes
+[a page](https://nercacuk.sharepoint.com/sites/BASDigitalw/internal-services/service-desk/Pages/magic.aspx) (internal)
+directing users to create Helpdesk requests via a web form.
 
 This ensures users can find the MAGIC Helpdesk within the Digital Workspace search and site wide navigation.
 
 ##### Web form
 
 Requests submitted through the online web form trigger a Microsoft Power Automate Flow,
-[MAGIC Helpdesk (web form)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/d84b9a44-8b3c-465b-96d3-c95af6ad4c4c/details).
+[MAGIC Helpdesk (web form)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/d84b9a44-8b3c-465b-96d3-c95af6ad4c4c/details)
+(internal, MAGIC).
 
 Attachments added to the online form trigger a separate Power Automate Flow,
-[MAGIC Helpdesk (file upload)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/84e5c72c-655b-4c11-8c4a-73bc9b52b931/details),
-which will save the file to a SharePoint document library. The web form will include attachment information in the
-request sent to create the helpdesk request.
+[MAGIC Helpdesk (file upload)](https://emea.flow.microsoft.com/manage/environments/Default-b311db95-32ad-438f-a101-7ba061712a4e/flows/84e5c72c-655b-4c11-8c4a-73bc9b52b931/details)
+(internal, MAGIC), which will save the file to a SharePoint document library. The web form will include attachment
+information in the request sent to create the helpdesk request.
 
 Multiple files can be attached, each with a maximum size of 100MB (set by Power Automate).
 
@@ -193,7 +195,8 @@ This project runs as a static website.
 
 Terraform is used to provision resources required for the static website.
 
-Access to the [BAS AWS account](https://gitlab.data.bas.ac.uk/WSF/bas-aws) is needed to provisioning these resources.
+Access to the [BAS AWS account](https://gitlab.data.bas.ac.uk/WSF/bas-aws) (internal) is needed to provisioning these
+resources.
 
 **Note:** This provisioning should have already been performed (and applies globally). If changes are made to this
 provisioning it only needs to be applied once.
@@ -219,7 +222,7 @@ State information for this project is stored remotely using a
 [Backend](https://www.terraform.io/docs/backends/index.html).
 
 Specifically the [AWS S3](https://www.terraform.io/docs/backends/types/s3.html) backend as part of the
-[BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project.
+[BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project (internal).
 
 Remote state storage will be automatically initialised when running `terraform init`. Any changes to remote state will
 be automatically saved to the remote backend, there is no need to push or pull changes.
@@ -229,8 +232,8 @@ be automatically saved to the remote backend, there is no need to push or pull c
 Permission to read and/or write remote state information for this project is restricted to authorised users. Contact
 the [BAS Mapping and Geographic Information Centre (MAGIC)](mailto:servicedesk@bas.ac.uk) to request access.
 
-See the [BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project for how these
-permissions to remote state are enforced.
+See the [BAS Terraform Remote State](https://gitlab.data.bas.ac.uk/WSF/terraform-remote-state) project (internal) for
+how these permissions to remote state are enforced.
 
 ## Development
 
@@ -271,7 +274,7 @@ The maintainer of this project is the BAS Mapping and Geographic Information Cen
 ## Issue tracking
 
 This project uses issue tracking, see the
-[Issue tracker](https://gitlab.data.bas.ac.uk/MAGIC/helpdesk-implementation/issues) for more information.
+[Issue tracker](https://gitlab.data.bas.ac.uk/MAGIC/helpdesk-implementation/issues) (internal) for more information.
 
 **Note:** Read & write access to this issue tracker is restricted. Contact the project maintainer to request access.
 
