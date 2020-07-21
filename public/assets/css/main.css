@@ -1,6 +1,12 @@
 .app-spacing {
   margin-bottom: 60px;
 }
+.app-form-spacing {
+  margin-bottom: 30px;
+}
+.app-form-group-with-alert label {
+  margin-bottom: 20px;
+}
 
 #request-form-result {
   margin-top: 30px;
