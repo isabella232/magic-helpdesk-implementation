@@ -191,13 +191,15 @@ passes through different systems.
 
 #### Request attachment storage
 
-Attachments for requests have been stored in different places as the implementation of the Helpdesk has evolved:
+Attachments for requests have been stored in different places as the implementation of the Helpdesk has evolved over
+time:
 
 * in version `1.0.0`, attachments where stored in `/data/magic_external/magic_helpdesk_requests/515` on the BAS SAN,
   organised in per-issue directories
-* after version `2.0.0`, attachments are stored in a Microsoft SharePoint library, currently
-  [`felnne-api-test2`](https://nercacuk.sharepoint.com/sites/BASMagicTeam/felnneapitest2/Forms/AllItems.aspx) in the BAS
-  MAGIC Team SharePoint site (internal, MAGIC).
+* after version `2.0.0`, attachments are stored in the
+  [`magic-helpdesk-attachments`](https://nercacuk.sharepoint.com/sites/BASMagicTeam/magichelpdeskattachments)
+  (internal, MAGIC) Microsoft SharePoint library within the
+  [BAS MAGIC Team](https://nercacuk.sharepoint.com/sites/BASMagicTeam) site (internal, MAGIC)
 
 ## Setup
 

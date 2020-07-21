@@ -1,5 +1,5 @@
 // Global state
-var attachments_base_url = "https://nercacuk.sharepoint.com/sites/BASMagicTeam/felnneapitest2/";
+var attachments_base_url = "https://nercacuk.sharepoint.com/sites/BASMagicTeam/magichelpdeskattachments/";
 var attachments = [];
 
 // Request form setup
