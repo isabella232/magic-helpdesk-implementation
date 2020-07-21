@@ -4,7 +4,10 @@
 .app-form-spacing {
   margin-bottom: 30px;
 }
-.app-form-group-with-alert label {
+.app-form-group-with-explanation label {
+  margin-bottom: 20px;
+}
+.app-form-group-with-explanation p.app-explanation {
   margin-bottom: 20px;
 }
 

@@ -70,19 +70,16 @@
                 </div>
             </nav>
             <div class="bsk-container">
-                <span class="bsk-text-uppercase bsk-label bsk-label-phase-alpha">Alpha</span>
+                <span class="bsk-text-uppercase bsk-label bsk-label-phase-beta">Beta</span>
                 This is a new service. Your <a href="mailto:magic@bas.ac.uk">feedback</a> will make it better.
                 <hr class="bsk-hr-dashed">
             </div>
         </header>
         <main class="bsk-container bsk-pattern-page-not-found" id="site-main-content">
-            <h1 class="bsk-page-header">Request geospatial and mapping support</h1>
+            <h1 class="bsk-page-header">Welcome to the MAGIC Helpdesk</h1>
             <div class="app-spacing">
                 <p>Please use this form to request advice, maps, data, satellite images, or anything geospatial related.</p>
-                <p>Your request will be sent to the <strong>Mapping and Geographic Information Centre (MAGIC)</strong>, who provide geospatial expertise and support within BAS.</p>
-                <div class="bsk-alert bsk-alert-info bsk-alert-highlight">
-                    We aim to be in touch within 2 working days to confirm your request or discuss your requirements.
-                </div>
+                <p>For a full list of services please see the <a href="https://nercacuk.sharepoint.com/sites/BASDigitalw/internal-services/service-desk/Pages/magic.aspx">Digital Workspace</a>.</p>
             </div>
             <form id="request-form">
                 <fieldset class="bsk-row">
@@ -105,12 +102,10 @@
                     </div>
                 </fieldset>
                 <fieldset>
-                    <div class="bsk-form-group app-form-group-with-alert">
+                    <div class="bsk-form-group app-form-group-with-explanation">
                         <label class="bsk-control-label" for="request-form-content">Request details</label>
-                        <div class="bsk-alert bsk-alert-info bsk-alert-outline">
-                            <p>If requesting a map, please provide details regarding map size, extent, level of detail shown, etc.</p>
-                            <p>If requesting data or advice, please provide as much detail as possible.</p>
-                        </div>
+                        <p class="app-explanation">If requesting a map, please provide details regarding map size, extent, level of detail shown, etc.</p>
+                        <!-- <p>For data or advice, please provide as much detail as possible.</p> -->
                         <textarea class="bsk-form-control" id="request-form-content" rows="9" required></textarea>
                         <div class="bsk-help-block bsk-text-muted">
                             <i class="fab fa-markdown"></i> You can use <a href="https://commonmark.org/help/">Markdown</a> to format your request.
@@ -164,6 +159,9 @@
             <div>
                 <div class="bsk-alert bsk-alert-warning bsk-alert-highlight">
                     Do not any include any sensitive or personal information in your request.
+                </div>
+                <div class="bsk-alert bsk-alert-info bsk-alert-highlight">
+                    We aim to be in touch within 2 working days to confirm your request or discuss your requirements.
                 </div>
                 <button type="submit" id="request-form-submit" class="bsk-btn bsk-btn-lg bsk-btn-primary">
                     <i class="fa-fw far fa-envelope"></i>
