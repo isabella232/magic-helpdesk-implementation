@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 * Updating web form to use BAS Style Kit 0.6.0-beta
+* Updating web form to point to the Ice Flow rather than Digital Workspace
 
 ## [1.0.0] - 2019-03-19
 
